@@ -722,11 +722,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const imgPreview = document.getElementById('mueble-form-img-preview');
   const imgPathText = document.getElementById('mueble-form-img-path');
 
-  const btnGenerateAi = document.getElementById('btn-generate-ai');
-  const aiProgressBox = document.getElementById('ai-progress-box');
-  const aiProgressBar = document.getElementById('ai-progress-bar');
-  const aiProgressStatus = document.getElementById('ai-progress-status');
-  const aiProgressPercent = document.getElementById('ai-progress-percent');
+  const btnGenerateAi = null;
+  const aiProgressBox = null;
+  const aiProgressBar = null;
+  const aiProgressStatus = null;
+  const aiProgressPercent = null;
 
   function updateFormImage(url) {
     fFoto.value = url;
@@ -801,89 +801,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  btnGenerateAi.addEventListener('click', () => {
-    const nombre = document.getElementById('f-nombre').value.trim();
-    const material = document.getElementById('f-material').value.trim();
-    const tipo = document.getElementById('f-tipo').value;
-    
-    if (!nombre) {
-      alert('Por favor ingrese al menos el "Nombre Comercial" del mueble para que Alpes AI pueda generar un diseño apropiado.');
-      document.getElementById('f-nombre').focus();
-      return;
-    }
-
-    aiProgressBox.classList.remove('hidden');
-    btnGenerateAi.disabled = true;
-    btnGenerateAi.classList.add('opacity-50', 'pointer-events-none');
-    
-    let progress = 0;
-    aiProgressBar.style.width = '0%';
-    aiProgressPercent.textContent = '0%';
-    
-    const steps = [
-      { prg: 15, msg: 'Conectando con el Servidor Creativo Alpes AI...' },
-      { prg: 40, msg: `Diseñando modelo conceptual para "${nombre}" (${material})...` },
-      { prg: 70, msg: 'Descargando renderizado 3D de alta definición en formato optimizado...' },
-      { prg: 90, msg: 'Sanitizando URL y aplicando filtros de iluminación de catálogo...' },
-      { prg: 100, msg: '¡Imagen descargada e integrada con éxito al catálogo!' }
-    ];
-
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 8) + 4;
-      if (progress >= steps[currentStep].prg) {
-        aiProgressStatus.textContent = steps[currentStep].msg;
-        currentStep = Math.min(currentStep + 1, steps.length - 1);
-      }
-      
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-        
-        let finalUrl = '';
-        const nameLower = nombre.toLowerCase();
-        const matLower = material.toLowerCase();
-        
-        if (nameLower.includes('mesa') && (nameLower.includes('natural') || nameLower.includes('wood') || matLower.includes('madera')) && !nameLower.includes('caoba') && !nameLower.includes('avellana')) {
-          finalUrl = 'public/images/mesa_natural.jpg';
-        } else if (nameLower.includes('caoba') || nameLower.includes('mahogany') || matLower.includes('caoba')) {
-          finalUrl = 'public/images/mesa_caoba.jpg';
-        } else if (nameLower.includes('avellana') || nameLower.includes('hazelnut')) {
-          finalUrl = 'public/images/mesa_avellana.jpg';
-        } else if (nameLower.includes('silla') && (nameLower.includes('griega') || nameLower.includes('imperial'))) {
-          finalUrl = 'public/images/silla_griega.jpg';
-        } else if (nameLower.includes('credenza') || nameLower.includes('aparador') || nameLower.includes('bufet')) {
-          finalUrl = 'public/images/credenza_clasica.jpg';
-        } else if (tipo === 'Exterior' && (nameLower.includes('sofá') || nameLower.includes('sofa') || nameLower.includes('rattan') || nameLower.includes('mimbre'))) {
-          finalUrl = 'public/images/sofa_exterior.jpg';
-        } else if (tipo === 'Exterior' && (nameLower.includes('silla') || nameLower.includes('reclinable'))) {
-          finalUrl = 'public/images/silla_exterior.jpg';
-        } else if (nameLower.includes('té') || nameLower.includes('te') || nameLower.includes('blanco') || nameLower.includes('blanc')) {
-          finalUrl = 'public/images/mesa_te_blanca.jpg';
-        } else {
-          // Dynamic query from beautiful unsplash matching name
-          const cleanKeywords = encodeURIComponent(`${material || 'wooden'} ${nombre.split(' ')[0]}`);
-          finalUrl = `https://images.unsplash.com/featured/800x600/?furniture,indoor,${cleanKeywords}`;
-        }
-        
-        updateFormImage(finalUrl);
-        fFotoManual.value = finalUrl;
-        
-        aiProgressBar.style.width = '100%';
-        aiProgressPercent.textContent = '100%';
-        
-        setTimeout(() => {
-          aiProgressBox.classList.add('hidden');
-          btnGenerateAi.disabled = false;
-          btnGenerateAi.classList.remove('opacity-50', 'pointer-events-none');
-        }, 1200);
-      } else {
-        aiProgressBar.style.width = `${progress}%`;
-        aiProgressPercent.textContent = `${progress}%`;
-      }
-    }, 120);
-  });
-
   function openMuebleForm(isEdit, item = null) {
     muebleFormError.classList.add('hidden');
     muebleFormError.textContent = '';
@@ -895,7 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleImgUploadBtn.className = "flex-1 py-2 px-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-1 bg-white text-stone-900 shadow-xs";
     toggleImgPresetsBtn.className = "flex-1 py-2 px-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-1 text-stone-500 hover:text-stone-800";
     toggleImgGenerateBtn.className = "flex-1 py-2 px-2 text-[11px] font-bold rounded-lg transition-all flex items-center justify-center gap-1 text-stone-500 hover:text-stone-800";
-    aiProgressBox.classList.add('hidden');
+    if (aiProgressBox) aiProgressBox.classList.add('hidden');
     fFileName.classList.add('hidden');
     fFileName.textContent = '';
     fFotoFile.value = '';
